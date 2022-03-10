@@ -151,3 +151,108 @@ plt.xlabel(r"$x$")
 plt.ylabel(r"$y$")
 
 plt.savefig('ruch3.pdf')
+
+
+# -------------------------------------------
+
+G = 1.
+M = 1. # żeby G*M = 1
+
+dt_list = [0.01, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5]
+dim = 2
+
+x_text = [0.095, 0.575, 0.095, 0.575, 0.095, 0.575, 0.095, 0.575]
+y_text = [0.962, 0.962, 0.718, 0.718, 0.475, 0.475, 0.233, 0.233]
+
+fig, ax = plt.subplots(nrows=4, ncols=2, sharex=True, figsize=(18,24))
+plt.subplots_adjust(left=0.08, right=0.96, bottom=0.05, top=0.98)
+
+k = 0
+for i in range(4):
+    for j in range(2):
+        if k == 0:
+            nsteps = 4000
+        else:
+            nsteps = 2000
+        dt = dt_list[k]
+
+        t = np.zeros(nsteps+1)
+        r = np.zeros((dim,nsteps+1))
+        v = np.zeros((dim,nsteps+1))
+        a = np.zeros((dim,nsteps+1))
+
+        t[0] = 0.0
+        r[0][0] = 1.0
+        r[1][0] = 0.0
+        v[0][0] = 0.0
+        v[1][0] = 1.3
+
+        t_out, r_out, v_out, a_out = ruch(nsteps,r,v)
+
+        ax[i,j].scatter(r_out[0], r_out[1], s=10, c='k')
+        ax[i,j].scatter(0, 0, s=300, c='yellow')
+
+        plt.figtext(x_text[k], y_text[k], f'$dt=${dt:.2f}')
+
+        ax[i,j].axis('equal')
+        ax[i,j].set_xlabel(r"$x$")
+        ax[i,j].set_ylabel(r"$y$")
+
+        k += 1
+
+plt.savefig('ruch4.pdf')
+
+
+
+# -------------------------------------------
+
+G = 1.
+M = 1. # żeby G*M = 1
+
+dt_list = [0.01, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5]
+dim = 2
+x_start = [1.0, 2.0, 1.0, 1.5, 1.8, 1.1, 1.2, 1.0]
+y_start = [0.0, 0.5, 1.0, 0.2, 0.8, -0.1, 0.4, 0.0]
+vx_start = [-0.5, 0.0, 0.0, -0.5, -0.5, 0.0, 0.0, 0.5]
+vy_start = [1.2, 0.8, 1.1, 0.8, 0.5, 1.3, 1.0, 1.0]
+
+x_text = [0.095, 0.575, 0.095, 0.575, 0.095, 0.575, 0.095, 0.575]
+y_text = [0.962, 0.962, 0.718, 0.718, 0.475, 0.475, 0.233, 0.233]
+
+fig, ax = plt.subplots(nrows=4, ncols=2, figsize=(18,24))
+plt.subplots_adjust(left=0.08, right=0.96, bottom=0.05, top=0.98)
+
+k = 0
+for i in range(4):
+    for j in range(2):
+        if k == 0:
+            nsteps = 4000
+        else:
+            nsteps = 2000
+        dt = 0.1
+
+        t = np.zeros(nsteps+1)
+        r = np.zeros((dim,nsteps+1))
+        v = np.zeros((dim,nsteps+1))
+        a = np.zeros((dim,nsteps+1))
+
+        t[0] = 0.0
+        r[0][0] = x_start[k]
+        r[1][0] = y_start[k]
+        v[0][0] = vx_start[k]
+        v[1][0] = vy_start[k]
+
+        t_out, r_out, v_out, a_out = ruch(nsteps,r,v)
+
+        ax[i,j].scatter(r_out[0], r_out[1], s=10, c='k')
+        ax[i,j].scatter(0, 0, s=300, c='yellow')
+
+        plt.figtext(x_text[k], y_text[k]-0.03, f'$x_0=${r[0][0]:.2f}\n$y_0=${r[1][0]:.2f}\n$v_x=${v[0][0]:.2f}\n$v_y=${v[1][0]:.2f}')
+
+        ax[i,j].axis('equal')
+        ax[i,j].set_xlabel(r"$x$")
+        ax[i,j].set_ylabel(r"$y$")
+
+        k += 1
+
+plt.savefig('ruch5.pdf')
